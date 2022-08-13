@@ -3,13 +3,13 @@ const router = express.Router()
 
 //loggin/landing page
 router.get('/', (req, res) => {
-    res.send('loggin my guy')
+    res.render('login')
 })
 
 
 //dashboard get/dashboard
 router.get('/dashboard', (req, res) => {
-    res.send('Dashboard')
+    res.render('dashboard')
 })
 
 
