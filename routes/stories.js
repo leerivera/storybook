@@ -11,18 +11,17 @@ router.get('/add', ensureAuth,(req, res) => {
 })
 
 
-// @desc process add form
-// @route POST/stories
-router.get('/add', ensureAuth, async (req, res) => {
-    try{
-        req.body.user = req.user.id
-        await Story.create(req.body)
-        res.redirect('/dashboard')
-
+// @desc    Process add form
+// @route   POST /stories
+router.post('/', ensureAuth, async (req, res) => {
+    try {
+      req.body.user = req.user.id
+      await Story.create(req.body)
+      res.redirect('/dashboard')
     } catch (err) {
-        console.log(err)
-        res.render('/error/500')
+      console.error(err)
+      res.render('error/500')
     }
-})
+  })
 
 module.exports = router
