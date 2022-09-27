@@ -33,7 +33,9 @@ if (process.env.NODE_ENV === 'development'){
 
 //handlebar helpers
 const {
-  formatDate
+  formatDate,
+  stripTags,
+  truncate
 } = require('./helpers/hbs')
 
 //handlebars
@@ -42,9 +44,9 @@ app.engine(
     '.hbs',
     exphbs.engine({
       helpers: {
-        formatDate
-        // stripTags,
-        // truncate,
+        formatDate,
+        stripTags,
+        truncate
         // editIcon,
         // select,
       },
