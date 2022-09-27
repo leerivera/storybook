@@ -35,7 +35,8 @@ if (process.env.NODE_ENV === 'development'){
 const {
   formatDate,
   stripTags,
-  truncate
+  truncate,
+  editIcon
 } = require('./helpers/hbs')
 
 //handlebars
@@ -46,8 +47,8 @@ app.engine(
       helpers: {
         formatDate,
         stripTags,
-        truncate
-        // editIcon,
+        truncate,
+        editIcon,
         // select,
       },
       defaultLayout: 'main',
@@ -69,6 +70,14 @@ app.use(
 //passport middleware
 app.use(passport.initialize())
 app.use(passport.session())
+
+// set global var
+
+app.use(function (req, res, next) {
+  res.locals.user = req.user || null
+  next()
+})
+
 
 // static folder
 app.use(express.static(path.join(__dirname, 'public')))
