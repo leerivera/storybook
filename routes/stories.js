@@ -43,6 +43,29 @@ router.get('/', ensureAuth, async(req, res) => {
     
 })
 
+// @desc    Show single story
+// @route   GET /stories/:id
+router.get('/:id', ensureAuth, async (req, res) => {
+    try {
+      let story = await Story.findById(req.params.id).populate('user').lean()
+  
+      if (!story) {
+        return res.render('error/404')
+      }
+  
+      if (story.user._id != req.user.id && story.status == 'private') {
+        res.render('error/404')
+      } else {
+        res.render('stories/show', {
+          story,
+        })
+      }
+    } catch (err) {
+      console.error(err)
+      res.render('error/404')
+    }
+  })
+
 //@desc Show Edit page
 //@route GET /stories/edit/:id
 
@@ -65,25 +88,31 @@ router.get('/edit/:id', ensureAuth, async (req, res) => {
 })
 
 
-// @desc update story
-// @route PUT /stories/:id
-router.put('/:id', ensureAuth, async(req, res) => {
-    let story = await Story.findById(req.params.id).lean()
-
-    if(!story){
+// @desc    Update story
+// @route   PUT /stories/:id
+router.put('/:id', ensureAuth, async (req, res) => {
+    try {
+      let story = await Story.findById(req.params.id).lean()
+  
+      if (!story) {
         return res.render('error/404')
-    }
-
-    if(story.user != req.user.id) {
+      }
+  
+      if (story.user != req.user.id) {
         res.redirect('/stories')
-     } else {
-        story = await Story.findOneAndUpdate({_id: req.params.id }, req.body, {
-            new: true,
-            runValidators: true
+      } else {
+        story = await Story.findOneAndUpdate({ _id: req.params.id }, req.body, {
+          new: true,
+          runValidators: true,
         })
+  
         res.redirect('/dashboard')
-     }
-})
+      }
+    } catch (err) {
+      console.error(err)
+      return res.render('error/500')
+    }
+  })
 
 // @desc    Delete story
 // @route   DELETE /stories/:id
